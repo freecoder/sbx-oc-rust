@@ -3,7 +3,7 @@ FROM docker/sandbox-templates:opencode-nightly
 USER root
 
 ### Ubuntu Packages ###
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     build-essential \
     fd-find \
     ripgrep \
@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     nodejs \
     npm \
+    golang-go \
     python3 \
     python3-pip \
     python3-venv \
