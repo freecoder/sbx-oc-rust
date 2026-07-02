@@ -1,9 +1,10 @@
-FROM docker/sandbox-templates:opencode-nightly
+FROM docker/sandbox-templates:opencode
 
 USER root
 
 ### Ubuntu Packages ###
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends \
     build-essential \
     fd-find \
     ripgrep \
@@ -42,9 +43,16 @@ RUN /home/agent/.cargo/bin/rustup target add \
     /home/agent/.cargo/bin/rustup component add rustfmt clippy rust-analyzer rust-src && \
     /home/agent/.cargo/bin/rustup set default-host x86_64-unknown-linux-gnu
 
+### Pi.Dev ###
+RUN npm install -g --ignore-scripts @earendil-works/pi-coding-agent
+
 ### Semble ###
 RUN /usr/local/bin/uv tool install semble
 
 ### CodeGraph ###
 RUN /usr/bin/npm install -g @colbymchenry/codegraph
 
+### Amend PATH
+ENV PATH="/home/agent/.local:$PATH"
+ENV PATH="/home/agent/.local/bin:$PATH"
+ENV PATH="/home/agent/.cargo/bin:$PATH"
